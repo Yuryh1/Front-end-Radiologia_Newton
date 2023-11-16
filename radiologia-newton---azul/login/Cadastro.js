@@ -5,14 +5,26 @@ import { View, Image, StyleSheet } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import Logo from '../assets/logo_odonto.png'
 import { ImagePicker, TouchableOpacity } from 'react-native';
+import * as AuthApi from "./AuthApi";
 
 export default function RegisterScreen() {
-  const [nome, setNome] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [ra, setRa] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
 
   const [image, setImage] = useState(null);
+
+  const handleSubmit = async () => {
+      const data = {
+          name,
+          email,
+          ra,
+          password,
+          image
+      }
+      const createdUser = await AuthApi.createUser(data)
+  }
 
 const pickImage = async () => {
   const result = await ImagePicker.launchImageLibrary();
@@ -41,8 +53,8 @@ const pickImage = async () => {
       />
       <TextInput
         label="Nome"
-        value={nome}
-        onChangeText={text => setNome(text)}
+        value={name}
+        onChangeText={text => setName(text)}
       />
       <TextInput
         label="Email"
@@ -56,11 +68,11 @@ const pickImage = async () => {
       />
       <TextInput
         label="Senha"
-        value={senha}
-        onChangeText={text => setSenha(text)}
+        value={password}
+        onChangeText={text => setPassword(text)}
         secureTextEntry
       />
-      <Button mode="contained" onPress={() => console.log('Cadastrado')}>
+      <Button mode="contained" onPress={() => handleSubmit()}>
         Cadastrar
       </Button>
     </View>

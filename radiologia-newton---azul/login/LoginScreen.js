@@ -1,21 +1,64 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, KeyboardAvoidingView} from 'react-native';
 import Constants from 'expo-constants';
 import{TextInput, Button} from 'react-native-paper'
+import * as WebBrowser from 'expo-web-browser';
 import Logo from '../assets/logo_odonto.png'
 import LogoGoogle from './loginIcon.js'
 import LogoApple from './loginIcon2.js'
-
 import * as AuthApi from './AuthApi'
 import * as UserRepository from './UserRepository'
-
+import * as Google from 'expo-auth-session/providers/google';
+WebBrowser.maybeCompleteAuthSession();
+import AsyncStorage from "@react-native-async-storage/async-storage";
  export default ({navigation, route}) => {
+   const [userInfo, setUserInfo] = useState(null);
+   const [email, setEmail] = useState('')
+   const [password, setPassword] = useState('')
+   const [request, response, promptAsync]= Google.useAuthRequest({
+     androidClientId:"1015267743443-va9trsi2l7gva44ph1n3murnrik1sui0.apps.googleusercontent.com",
+        iosClientId:"1015267743443-4oi2v62a293mgc47bcb3rcv6mldt957p.apps.googleusercontent.com",
+        webClientId:"1015267743443-1bn3i0fd3n5kqb2rhdbfco1aeo2bhjt0.apps.googleusercontent.com",
+   })
+   useEffect(() => {
+        handleSigninWithGoogle()
+   }, [response]);
+async function handleSigninWithGoogle() {
+     const userGoogle = await AsyncStorage.getItem('@user');
+     if(!userGoogle){
+       if(response?.type ==='success'){
+await getUserInfo(response.authentication.accessToken)
+       }
 
-   const [username, setUsername] = useState('112233')
-   const [password, setPassword] = useState('233')
+     }else{
+       setUserInfo(JSON.parse(userGoogle))
 
-   const login = async () => {
-     const user = await AuthApi.login(username, password)
+
+     }
+}
+const getUserInfo = async (token) => {
+  if (!token) return;
+  try {
+    const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+    );
+    const userInfoResponse = await response.json();
+    await AsyncStorage.setItem('@user', JSON.stringify(userInfoResponse))
+    setUserInfo(userInfoResponse)
+     }catch(error){
+    console.log(error)
+  }
+}
+   const login = async (loginType) => {
+     const data = {
+         email,
+         password,
+         loginType
+     }
+     const user = await AuthApi.login(data)
 
      if(user) {
        await UserRepository.save(user)
@@ -32,9 +75,9 @@ import * as UserRepository from './UserRepository'
     </View>
       <View style = {styles.inputs}>
         <TextInput
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          style = {styles.email} 
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          style = {styles.email}
           label = "E-mail"
           mode = "flat"
           theme={{
@@ -47,7 +90,7 @@ import * as UserRepository from './UserRepository'
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
-          style = {styles.senha} 
+          style = {styles.senha}
           label = "Senha"
           mode = "flat"
           theme={{
@@ -56,13 +99,15 @@ import * as UserRepository from './UserRepository'
             }
           }}
         />
- 
+
         <Button
          mode= "contained"
          buttonColor= '#193073'
          textColor = "white"
          style = {styles.botao}
-         onPress={login}
+         onPress={()=> {
+           login('email')
+         }}
          >
             ENTRAR
         </Button>
@@ -74,10 +119,14 @@ import * as UserRepository from './UserRepository'
           onPress={() => navigation.navigate('Cadastro')}>
           CADASTRAR
         </Button>
-        <Text style ={styles.cadastre}>Cadastre-se</Text> 
+        <Text style ={styles.cadastre}>Cadastre-se</Text>
         <Text style={styles.entradas}> ────────  Ou continue com  ────────</Text>
         <View style = {styles.entradasLogin}>
-          <LogoGoogle></LogoGoogle>
+          <LogoGoogle
+          onPress={()=>{promptAsync()}
+
+          }
+          ></LogoGoogle>
           <LogoApple></LogoApple>
         </View>
       </View>

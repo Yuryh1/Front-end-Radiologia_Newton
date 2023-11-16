@@ -95,7 +95,7 @@ export default ({navigation, route}) =>{
 
   const findUser = async () => {
     const user = await UserRepository.find()
-    navigation.setOptions({ title: user.data.email })
+    navigation.setOptions({ title: user.user.email })
   }
 
   useEffect(() => {

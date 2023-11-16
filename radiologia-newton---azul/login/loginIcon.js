@@ -3,14 +3,13 @@ import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 // import { AntDesign } from '@expo/vector-icons'; 
 import LogoGoogle from '../assets/logoGoogle.png'
 
-export default () => {
-  return(
-    <TouchableOpacity style = {styles.main}>
-      <Image source={LogoGoogle} style={styles.logoGoogle} />
-    </TouchableOpacity>
-
-  )
-}
+const LogoGoogleComponent = ({ onPress }) => {
+  return (
+      <TouchableOpacity style={styles.main} onPress={onPress}>
+        <Image source={LogoGoogle} style={styles.logoGoogle} />
+      </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create ({
   main: {
@@ -35,3 +34,4 @@ const styles = StyleSheet.create ({
   }
 
 })
+export default LogoGoogleComponent;
