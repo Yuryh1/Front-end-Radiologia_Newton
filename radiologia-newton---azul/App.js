@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -9,6 +9,8 @@ import XRayScreen from './xray/XRayScreen';
 import ListScreen from './question/ListScreen';
 import Cadastro from './login/Cadastro'
 import CreateScreen from './question/CreateScreen'
+import ContextUser, {UserContext} from './login/userContext'
+import {MenuContext, MenuProvider} from "./menus/menuContext";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -16,7 +18,6 @@ const Drawer = createDrawerNavigator();
 const MainScreen = () => {
   return (
     <Drawer.Navigator
-      useLegacyImplementation
       screenOptions={{
         headerStyle: {
           backgroundColor: '#27A4F2',
@@ -36,10 +37,16 @@ const MainScreen = () => {
 };
 
 export default () => {
-  return (
+    const userObject = useContext(UserContext)
+    const menuObject = useContext(MenuContext)
+    return (
+
+
+    <ContextUser>
+        <MenuProvider>
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="login"
+        initialRouteName='login'
         screenOptions={{
           headerStyle: {
             backgroundColor: '#27A4F2',
@@ -50,7 +57,7 @@ export default () => {
         }}>
         <Stack.Screen
           name="login"
-          component={LoginScreen}
+          component={userObject? MainScreen: LoginScreen}
           options={loginOptions}
         />
         <Stack.Screen
@@ -68,7 +75,7 @@ export default () => {
           component={XRayScreen}
           options={xRayOptions}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="createQuestion"
           component={CreateScreen}
           options={createScreenOptions}
@@ -78,9 +85,11 @@ export default () => {
           component={Cadastro}
           options={cadastrOptions}
         />
-        
+
       </Stack.Navigator>
     </NavigationContainer>
+        </MenuProvider>
+    </ContextUser>
   );
 };
 

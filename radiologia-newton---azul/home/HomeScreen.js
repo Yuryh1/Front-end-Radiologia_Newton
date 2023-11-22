@@ -1,12 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import ItemMenu from './ItemMenu.js'
 import {View, StyleSheet, FlatList} from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
+import {UserContext} from "../login/userContext";
 
 import Card from '../menus/Card'
 
 import * as UserRepository from '../login/UserRepository'
+import {MenuContext} from "../menus/menuContext";
 
 const menu = [
   {
@@ -91,35 +93,39 @@ export default ({navigation, route}) =>{
 
   //const {user} = route.params
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredList, setFilteredList] = useState([]) 
+  const [filteredList, setFilteredList] = useState([])
+  const menuObject = useContext(MenuContext)
+  const userObject = useContext(UserContext)
 
   const findUser = async () => {
     const user = await UserRepository.find()
-    navigation.setOptions({ title: user.user.email })
+    navigation.setOptions({ title: user.email })
   }
 
   useEffect(() => {
     findUser()
+    console.log(userObject)
   }, [])
 
   //alert(user.data.email)
 
   const onChangeSearch = (query) => {
-    setSearchQuery(query)
+    setSearchQuery(query);
 
-    if(query.trim().length > 0) {
-      const list = menu.reduce(
-        (accumulator, currentValue) => accumulator.concat(currentValue.itens), []
-      )
-      .filter(m => m.title.includes(query))
-
-      setFilteredList(list)
-
-
+    if (query.trim().length > 0) {
+      // Adaptação para filtrar com base nos dados do contexto
+      const list = menuObject.menuData.reduce(
+          (accumulator, currentValue) => {
+            return accumulator.concat(currentValue.children || []);
+          }, []
+      ).filter(m => m.name.includes(query));
+      console.log(list)
+      setFilteredList(list);
     } else {
-      setFilteredList([])
+      setFilteredList([]);
     }
-  }
+
+  };
 
   return(
     <View style = {styles.container}>
@@ -135,12 +141,12 @@ export default ({navigation, route}) =>{
           ? <FlatList
               key='flatList01'
               style = {styles.flatList}
-              data = {menu}
-              renderItem= {(row) => 
-                <ItemMenu 
-                  title  = {row.item.descricao}
+              data = {menuObject.menuData}
+              renderItem= {(row) =>
+                <ItemMenu
+                  title  = {row.item.name}
                   icon = {row.item.icone}
-                  onPress={() => navigation.navigate('menu')}
+                  onPress={() => navigation.navigate('menu', {index: row.index})}
                 />
               }
               keyExtractor={(item) => item.id}
@@ -150,8 +156,8 @@ export default ({navigation, route}) =>{
               data={filteredList}
               renderItem={({ item }) => (
                 <Card
-                  title={item.title}
-                  subTitle={item.subTitle}
+                  title={item.name}
+                  subTitle={item.name}
                   image={item.image}
                   onPress={() => navigation.navigate('xray')}
                 />

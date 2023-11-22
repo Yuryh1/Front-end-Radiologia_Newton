@@ -13,9 +13,8 @@ export const createUser = async (data) => {
 
 export const login = async (data) => {
   try {
-    if(data.loginType === 'google') {
-    const response = await axios.get(`${API_URL}/auth/google`, data);
-    return response.data
+    if(data === 'google') {
+   window.open('http://localhost:3000/auth/google', '_self');
     } else{
       const response = await axios.post(`${API_URL}/login`, data);
       return response.data;
@@ -46,7 +45,7 @@ export const deleteUser = async (id) => {
 
 export const getUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users`);
+    const response = await axios.get(`${API_URL}/getUser`, {withCredentials: true});
     return response.data;
   } catch (error) {
     throw new Error(error.message);

@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: 'Roboto',
     fontSize: 22,
     fontWeight: 'bold',
     color: 'white',

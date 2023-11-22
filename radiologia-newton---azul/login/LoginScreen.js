@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, StyleSheet, Image, KeyboardAvoidingView} from 'react-native';
 import Constants from 'expo-constants';
 import{TextInput, Button} from 'react-native-paper'
@@ -8,6 +8,7 @@ import LogoGoogle from './loginIcon.js'
 import LogoApple from './loginIcon2.js'
 import * as AuthApi from './AuthApi'
 import * as UserRepository from './UserRepository'
+import {UserContext} from "./userContext";
 import * as Google from 'expo-auth-session/providers/google';
 WebBrowser.maybeCompleteAuthSession();
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,44 +16,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
    const [userInfo, setUserInfo] = useState(null);
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
-   const [request, response, promptAsync]= Google.useAuthRequest({
-     androidClientId:"1015267743443-va9trsi2l7gva44ph1n3murnrik1sui0.apps.googleusercontent.com",
-        iosClientId:"1015267743443-4oi2v62a293mgc47bcb3rcv6mldt957p.apps.googleusercontent.com",
-        webClientId:"1015267743443-1bn3i0fd3n5kqb2rhdbfco1aeo2bhjt0.apps.googleusercontent.com",
-   })
-   useEffect(() => {
-        handleSigninWithGoogle()
-   }, [response]);
-async function handleSigninWithGoogle() {
-     const userGoogle = await AsyncStorage.getItem('@user');
-     if(!userGoogle){
-       if(response?.type ==='success'){
-await getUserInfo(response.authentication.accessToken)
-       }
-
-     }else{
-       setUserInfo(JSON.parse(userGoogle))
-
-
-     }
-}
-const getUserInfo = async (token) => {
-  if (!token) return;
-  try {
-    const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-    );
-    const userInfoResponse = await response.json();
-    await AsyncStorage.setItem('@user', JSON.stringify(userInfoResponse))
-    setUserInfo(userInfoResponse)
-     }catch(error){
-    console.log(error)
-  }
-}
+   const userObject = useContext(UserContext)
    const login = async (loginType) => {
+
      const data = {
          email,
          password,
@@ -60,12 +26,32 @@ const getUserInfo = async (token) => {
      }
      const user = await AuthApi.login(data)
 
-     if(user) {
-       await UserRepository.save(user)
+        if(user){
        navigation.navigate('main')
      } else {
        alert('Usuário ou senha inválido')
      }
+   }
+   const handleToken = async (token) => {
+
+   }
+   const handleLogin = async (loginType) => {
+     const userInfo = await UserRepository.find()
+     if(loginType === 'google'){
+     if(!userObject && !userInfo){
+       await AuthApi.login(loginType)
+     }
+     else{
+       console.log(userObject)
+       console.log(userInfo)
+       await UserRepository.save(userObject)
+       navigation.navigate('main')
+     }
+     }
+     else{
+   await  login(loginType)
+     }
+
    }
 
   return (
@@ -106,8 +92,8 @@ const getUserInfo = async (token) => {
          textColor = "white"
          style = {styles.botao}
          onPress={()=> {
-           login('email')
-         }}
+           login('email')}}
+
          >
             ENTRAR
         </Button>
@@ -119,11 +105,10 @@ const getUserInfo = async (token) => {
           onPress={() => navigation.navigate('Cadastro')}>
           CADASTRAR
         </Button>
-        <Text style ={styles.cadastre}>Cadastre-se</Text>
         <Text style={styles.entradas}> ────────  Ou continue com  ────────</Text>
         <View style = {styles.entradasLogin}>
           <LogoGoogle
-          onPress={()=>{promptAsync()}
+          onPress={()=>{ handleLogin('google')}
 
           }
           ></LogoGoogle>
@@ -141,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   logo: {
-    marginTop:150,
+    marginTop:40,
     width: 200,
     height: 200,
     alignSelf: "center"
@@ -169,8 +154,8 @@ const styles = StyleSheet.create({
   },
   botao: {
     marginTop: 10,
-    width: 355,
-    height: 60,
+    width: 200,
+    height: 30,
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center'
@@ -179,7 +164,7 @@ const styles = StyleSheet.create({
   entradas: {
     textAlign: 'center',
     fontSize: 13,
-    padding: 10,
+    padding: 0,
     marginTop: 11,
     color: '#193073',
   },

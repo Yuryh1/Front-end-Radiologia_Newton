@@ -1,113 +1,53 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import Card from './Card';
 import ItemMenu from './ItemMenu';
+import Card from './Card';
+import { MenuContext } from "./menuContext";
 
-const previousMenu = [
-  { id: 10, label: 'Dente e Estruturas Anexas' },
-  { id: 11, label: 'Maxila' },
-  { id: 12, label: 'Mandibula' },
-  { id: 13, label: 'Panorâmica' },
-];
+const MenuComponent = ({ navigation, route }) => {
+    const { menuData } = useContext(MenuContext);
+    const  idMenuBase  = route.params?.index;
+    const [activeMenuId, setActiveMenuId] = useState(null); // Estado para armazenar o ID do menu ativo
 
-const menus = [
-  {
-    id: 1,
-    title: 'Canais nutrientes',
-    subTitle: 'Canais nutrientes',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 2,
-    title: 'Câmara pupular e \ncanal radicular',
-    subTitle: 'Câmara pupular e canal \nradicular',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 3,
-    title: 'Cemento',
-    subTitle: 'Cemento',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 4,
-    title: 'Cortival alveolar',
-    subTitle: 'Cortival alveolar',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 5,
-    title: 'Crista óssea alveolar',
-    subTitle: 'Crista óssea alveolar',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 6,
-    title: 'Dentina',
-    subTitle: 'Dentina',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 7,
-    title: 'Esmalte',
-    subTitle: 'Esmalte',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-  {
-    id: 8,
-    title: 'Espaço do ligamento \nperiodontal',
-    subTitle: 'Espaço do ligamento \nperiodontal',
-    image: 'https://anatomia.ict.unesp.br/radiologia/mandibula/MAND%2001.jpg',
-  },
-];
+    const renderMenuItem = ({ item }) => {
+        return (
+            <View>
+                <ItemMenu
+                    label={item.name}
+                    icon={'tooth'}
+                    onPress={() => {
+                        setActiveMenuId(item.id === activeMenuId ? null : item.id); // Alterna o estado ativo
+                    }}
+                />
+                {item.id === activeMenuId && item.children && item.children.map(child => (
+                    <Card
+                        key={child.id}
+                        title={child.name}
+                        subTitle={child.description}
+                        image={child.image}
+                        onPress={() => navigation.navigate('xray', { id: child.id })}
+                    />
+                ))}
+            </View>
+        );
+    };
 
-export default ({ navigation, route }) => {
-  return (
-    <View style={styles.main}>
-      <FlatList
-        horizontal={true}
-        data={previousMenu}
-        renderItem={({ item }) => (
-          <ItemMenu
-            label={item.label}
-            onPress={() => alert('Menu ' + item.label)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        style={styles.previousMenu}
-      />
-      <FlatList
-        data={menus}
-        renderItem={({ item }) => (
-          <Card
-            title={item.title}
-            subTitle={item.subTitle}
-            image={item.image}
-            onPress={() => navigation.navigate('xray')}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        style={styles.menuList}
-      />
-    </View>
-  );
+    return (
+        <View style={styles.main}>
+            <FlatList
+                data={menuData[idMenuBase].children}
+                renderItem={renderMenuItem}
+                keyExtractor={item => item.id.toString()}
+            />
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  main: {
-    backgroundColor: '#EBF7FD',
-  },
-
-  previousMenu: {
-    paddingTop: 20,
-    paddingLeft: 10,
-    // borderBottomWidth: 1,
-    // borderBottomColor: '#1A2D99',
-  },
-
-  menuList: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 200,
-  },
+    main: {
+        backgroundColor: '#EBF7FD',
+    },
+    // Estilos adicionais, se necessário
 });
+
+export default MenuComponent;
