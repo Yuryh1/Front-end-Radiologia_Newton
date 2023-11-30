@@ -25,7 +25,7 @@ const MenuComponent = ({ navigation, route }) => {
                         title={child.name}
                         subTitle={child.description}
                         image={child.image}
-                        onPress={() => navigation.navigate('xray', { id: child.id })}
+                        onPress={() => navigation.navigate('xray', { image:child.image, description:child.description, title:child.name })}
                     />
                 ))}
             </View>
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     main: {
         backgroundColor: '#EBF7FD',
     },
-    // Estilos adicionais, se necessário
 });
 
 export default MenuComponent;

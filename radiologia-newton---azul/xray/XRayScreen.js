@@ -1,27 +1,20 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
-import data from './Data';
+import * as React from 'react';
+import { Card, Text } from 'react-native-paper';
 
-export default () => {
-  return (
-    <View>
-      <FlatList
-        data={imagens}
-        renderItem={({ item }) => (
-          <Image
-            source={{ uri: item.data }}
-            style={{ width: item.width, height: item.height, margin: 10 }}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        numColumns={3}
-      />
-    </View>
-  );
-};
 
-const imagens = [
-  { id: 1, width: 100, height: 100, data },
-  { id: 2, width: 100, height: 100, data },
-  { id: 3, width: 100, height: 100, data },
-];
+const MyComponent = ({route}) => {
+    const {image, description, title} = route.params
+return  (
+        <Card>
+            <Card.Title title={title}/>
+            <Card.Content>
+                <Text variant="titleLarge">{title}</Text>
+                <Text variant="bodyMedium">{description}</Text>
+            </Card.Content>
+            <Card.Cover source={{uri: image}}/>
+
+        </Card>
+    );
+}
+
+export default MyComponent;

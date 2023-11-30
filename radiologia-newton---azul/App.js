@@ -57,7 +57,7 @@ export default () => {
         }}>
         <Stack.Screen
           name="login"
-          component={userObject? MainScreen: LoginScreen}
+          component={userObject.name? MainScreen: LoginScreen}
           options={loginOptions}
         />
         <Stack.Screen

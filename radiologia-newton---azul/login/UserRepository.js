@@ -6,9 +6,15 @@ const save = async (user) => {
 }
 
 const find = async () => {
-  const jsonValue = await AsyncStorage.getItem('@user')
-  return jsonValue ? JSON.parse(jsonValue) : null  
-} 
+  try {
+    const jsonValue = await AsyncStorage.getItem('@user');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error('Erro ao ler dados do AsyncStorage:', e);
+    return null; // ou manipule o erro como achar melhor
+  }
+}
+
 
 const remove = async () => {
   await AsyncStorage.removeItem('@user')
