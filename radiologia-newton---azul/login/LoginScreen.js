@@ -1,6 +1,5 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, StyleSheet, Image, KeyboardAvoidingView} from 'react-native';
-import Constants from 'expo-constants';
+import React, { useState, useContext} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import{TextInput, Button} from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser';
 import Logo from '../assets/logo_odonto.png'
@@ -9,9 +8,7 @@ import LogoApple from './loginIcon2.js'
 import * as AuthApi from './AuthApi'
 import * as UserRepository from './UserRepository'
 import {UserContext} from "./userContext";
-import * as Google from 'expo-auth-session/providers/google';
 WebBrowser.maybeCompleteAuthSession();
-import AsyncStorage from "@react-native-async-storage/async-storage";
  export default ({navigation, route}) => {
    const [userInfo, setUserInfo] = useState(null);
    const [email, setEmail] = useState('')

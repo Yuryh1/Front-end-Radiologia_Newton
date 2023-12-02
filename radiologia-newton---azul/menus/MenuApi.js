@@ -1,12 +1,13 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://odonto-app-server.onrender.com';
 
 export const getMenuItems = async () => {
   try {
-    const response = await axios.get(`${API_URL}/getMenu`);
-    return response.data;
+    const response = await fetch(`${API_URL}/getMenu`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw new Error(error.message);
   }
-}
+};

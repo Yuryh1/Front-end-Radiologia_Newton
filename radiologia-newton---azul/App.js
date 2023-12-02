@@ -11,10 +11,30 @@ import Cadastro from './login/Cadastro'
 import CreateScreen from './question/CreateScreen'
 import ContextUser, {UserContext} from './login/userContext'
 import {MenuContext, MenuProvider} from "./menus/menuContext";
+import * as Linking from 'expo-linking';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+const prefix = Linking.createURL('/');
+
+const linking = {
+    prefixes: [prefix],
+    config: {
+        screens: {
+            login: 'login',
+            main: 'main',
+            home: 'home',
+            questionList: 'questionList',
+            menu: 'menu',
+            xray: 'xray',
+            createQuestion: 'createQuestion',
+            Cadastro: 'cadastro',
+            // Adicione outros caminhos conforme necessário
+        },
+    },
+};
 const MainScreen = () => {
   return (
     <Drawer.Navigator
@@ -44,7 +64,7 @@ export default () => {
 
     <ContextUser>
         <MenuProvider>
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName='login'
         screenOptions={{

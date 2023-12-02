@@ -1,11 +1,17 @@
-import axios from 'axios';
+import * as WebBrowser from "expo-web-browser";
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://odonto-app-server.onrender.com';
 
 export const createUser = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/createUser`, data);
-    return response.data;
+    const response = await fetch(`${API_URL}/createUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
   } catch (error) {
     throw new Error(error.message);
   }
@@ -13,22 +19,33 @@ export const createUser = async (data) => {
 
 export const login = async (data) => {
   try {
-    if(data === 'google') {
-   window.open('http://localhost:3000/auth/google', '_self');
-    } else{
-      const response = await axios.post(`${API_URL}/login`, data);
-      return response.data;
+    if (data === 'google') {
+      const url = 'https://odonto-app-server.onrender.com/auth/google';
+      await WebBrowser.openBrowserAsync(url);
+    } else {
+      const response = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+      return await response.json();
     }
-
   } catch (error) {
     throw new Error(error.message);
   }
 };
-
 export const updateUser = async (data) => {
   try {
-    const response = await axios.put(`${API_URL}/users/${data.id}`, data);
-    return response.data;
+    const response = await fetch(`${API_URL}/users/${data.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
   } catch (error) {
     throw new Error(error.message);
   }
@@ -36,8 +53,10 @@ export const updateUser = async (data) => {
 
 export const deleteUser = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/users/${id}`);
-    return response.data;
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
   } catch (error) {
     throw new Error(error.message);
   }
@@ -45,8 +64,11 @@ export const deleteUser = async (id) => {
 
 export const getUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/getUser`, {withCredentials: true});
-    return response.data;
+    const response = await fetch(`${API_URL}/getUser`, {
+      method: 'GET',
+      credentials: 'include'
+    });
+    return await response.json();
   } catch (error) {
     throw new Error(error.message);
   }
