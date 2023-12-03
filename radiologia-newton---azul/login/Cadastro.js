@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { View, Image, StyleSheet } from 'react-native';

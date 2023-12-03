@@ -11,8 +11,8 @@ import {UserContext} from "./userContext";
 WebBrowser.maybeCompleteAuthSession();
  export default ({navigation, route}) => {
    const [userInfo, setUserInfo] = useState(null);
-   const [email, setEmail] = useState('')
-   const [password, setPassword] = useState('')
+   const [email, setEmail] = useState('test@gmail.com')
+   const [password, setPassword] = useState('123')
    const userObject = useContext(UserContext)
    const login = async (loginType) => {
 
@@ -109,7 +109,7 @@ WebBrowser.maybeCompleteAuthSession();
 
           }
           ></LogoGoogle>
-          <LogoApple></LogoApple>
+          
         </View>
       </View>
     </View>
@@ -151,10 +151,12 @@ const styles = StyleSheet.create({
   },
   botao: {
     marginTop: 10,
-    width: 200,
-    height: 30,
+    width: 300,
+    height: 60,
     borderRadius: 10,
     alignSelf: 'center',
+    fontSize: 14,
+    elevation:10,
     justifyContent: 'center'
   },
 

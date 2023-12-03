@@ -1,5 +1,3 @@
-import * as WebBrowser from "expo-web-browser";
-
 const API_URL = 'https://odonto-app-server.onrender.com';
 
 export const createUser = async (data) => {
@@ -36,6 +34,7 @@ export const login = async (data) => {
     throw new Error(error.message);
   }
 };
+
 export const updateUser = async (data) => {
   try {
     const response = await fetch(`${API_URL}/users/${data.id}`, {

@@ -176,9 +176,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   flatList: {
-
+    alignSelf: 'center',
+    
   },
   pesquisa: {
     marginTop: 20,
+    marginLeft: 20,
+    marginRight: 20,
   }
 })

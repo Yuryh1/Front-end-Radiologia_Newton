@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#193073',
+    
   },
 
   icon:{

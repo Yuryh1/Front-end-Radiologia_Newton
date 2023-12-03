@@ -7,10 +7,15 @@ import HomeScreen from './home/HomeScreen';
 import MenuScreen from './menus/MenusScreen';
 import XRayScreen from './xray/XRayScreen';
 import ListScreen from './question/ListScreen';
-import Cadastro from './login/Cadastro'
+import Cadastro from './login/Cadastro';
+import ProfileScreen from './profile/ProfileScreen';
+import ContactScreen from './contact/ContactScreen';
+import TermsOfUseScreen from './termsOfUse/TermsOfUseScreen';
+ 
 import CreateScreen from './question/CreateScreen'
 import ContextUser, {UserContext} from './login/userContext'
 import {MenuContext, MenuProvider} from "./menus/menuContext";
+
 import * as Linking from 'expo-linking';
 
 
@@ -47,6 +52,8 @@ const MainScreen = () => {
         },
       }}>
       <Drawer.Screen name="home" component={HomeScreen} options={homeOptions} />
+      <Drawer.Screen name="perfil" component={ProfileScreen} options={profileOptions} />
+      <Drawer.Screen name="contato" component={ContactScreen} options={contactOptions} />
       <Drawer.Screen
         name="questionList"
         component={ListScreen}
@@ -105,6 +112,17 @@ export default () => {
           component={Cadastro}
           options={cadastrOptions}
         />
+         <Stack.Screen 
+          name="termosDeUso" 
+          component={TermsOfUseScreen} 
+          options={termsOfUseOptions} 
+        />
+          <Stack.Screen 
+          name="contato" 
+          component={ContactScreen} 
+          options={contactOptions} 
+        />
+        
 
       </Stack.Navigator>
     </NavigationContainer>
@@ -143,4 +161,13 @@ const createScreenOptions = {
 const cadastrOptions = {
   title: 'Cadastro',
 };
-
+const profileOptions = {
+  title: 'Perfil',
+};
+ 
+const termsOfUseOptions = {
+  title: 'Termos de Uso',
+}; 
+const contactOptions = {
+  title: 'Contato',
+};
