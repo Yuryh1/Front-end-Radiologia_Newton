@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "scheme": "odontonewton",
+    "name": "radiologia-newton---azul",
+    "slug": "snack-05b17240-66b7-4255-b799-191c350b4ec3",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.odonto.app.newton.android"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "62908aed-2b2b-41a1-ae59-4a3bf4f41e99"
+      }
+    }
+  }
+}
